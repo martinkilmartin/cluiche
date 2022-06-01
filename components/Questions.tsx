@@ -9,6 +9,8 @@ import {
   Container,
   Flex,
   FormControl,
+  FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -92,7 +94,7 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
     <Container centerContent>
       <Heading>Add Question</Heading>
       <Box>
-        <FormControl>
+        <FormControl isRequired isInvalid={errorText.length > 0}>
           <FormLabel htmlFor='question'>Question</FormLabel>
           <Input
             id='question'
@@ -104,7 +106,7 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
             }}
           />
         </FormControl>
-        <FormControl>
+        <FormControl isRequired isInvalid={errorText.length > 0}>
           <FormLabel htmlFor='answer'>Answer</FormLabel>
           <Input
             id='answer'
@@ -115,30 +117,13 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
               setNewAnswer(e.target.value);
             }}
           />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor='clue'>Clue</FormLabel>
-          <Input
-            id='clue'
-            type='text'
-            placeholder='42'
-            value={newClue}
-            onChange={(e) => {
-              setNewClue(e.target.value);
-            }}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor='tag'>Category</FormLabel>
-          <Input
-            id='tag'
-            type='text'
-            placeholder='#'
-            value={tag}
-            onChange={(e) => {
-              setTag(e.target.value);
-            }}
-          />
+          {errorText.length > 0 ? (
+            <FormHelperText>
+              {"Add a question and answer"}
+            </FormHelperText>
+          ) : (
+            <FormErrorMessage>{errorText}</FormErrorMessage>
+          )}
         </FormControl>
         <Button
           className='btn btn-primary'
@@ -147,7 +132,6 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           Add
         </Button>
       </Box>
-      {errorText && <Alert text={errorText} />}
       <Heading>Your Questions</Heading>
       <Box>
         <List spacing={3}>
@@ -192,7 +176,6 @@ const Question = ({ question, onDelete }: QuestionProps) => {
           onChange={(_e) => toggle()}
           checked={isAnswered ? true : false}
         />
-        {question?.tag?.length && <Badge ml='1'>{question.tag}</Badge>}
         <Box>
           <details>
             <summary>{question.question}</summary>
@@ -213,11 +196,5 @@ const Question = ({ question, onDelete }: QuestionProps) => {
     </ListItem>
   );
 };
-
-const Alert = ({ text }: { text: string }) => (
-  <div className='rounded-md bg-red-100 p-4 my-3'>
-    <div className='text-sm leading-5 text-red-700'>{text}</div>
-  </div>
-);
 
 export default Questions;
