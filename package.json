@@ -1,6 +1,6 @@
 {
-  "name": "supabase-nextjs",
-  "version": "0.1.0",
+  "name": "crypto-qwiz",
+  "version": "0.0.1-alpha",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,12 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.1",
+    "@chakra-ui/react": "^2.1.2",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@nextui-org/react": "^1.0.0-beta.7",
+    "@supabase/supabase-auth-helpers": "^1.4.2",
+    "@supabase/ui": "^0.36.5",
+    "framer-motion": "^6",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
+    "@types/node": "^17.0.36",
+    "@types/react": "^18.0.9",
+    "@vercel/node": "^1.15.4",
     "eslint": "8.16.0",
-    "eslint-config-next": "12.1.6"
+    "eslint-config-next": "12.1.6",
+    "typescript": "^4.7.2"
   }
 }
