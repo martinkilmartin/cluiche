@@ -31,7 +31,7 @@ type GameQuestion = Question & {
 };
 
 type Answer = {
-  uuid: number;
+  uuid: string;
   answer: string | null;
   correct: boolean | null;
   score: number | null;
