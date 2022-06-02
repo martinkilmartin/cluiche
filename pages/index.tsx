@@ -6,6 +6,7 @@ import {
   Container,
   Box,
   Flex,
+  Heading,
   Spacer,
   Stat,
   StatLabel,
@@ -79,20 +80,20 @@ const LoginPage: NextPage = () => {
       </Flex>
       <Tabs variant='enclosed-colored'>
         <TabList>
-          <Tab>Questions</Tab>
           <Tab>Games</Tab>
-          <Tab>Stats</Tab>
+          <Tab>Questions</Tab>
+          <Tab>Bank</Tab>
         </TabList>
         <TabPanels>
+          <TabPanel>
+            <Heading>Your Games</Heading>
+          </TabPanel>
           <TabPanel>
             <Flex>
               <Box>
                 <Questions user={user} />
               </Box>
             </Flex>
-          </TabPanel>
-          <TabPanel>
-            <p>two!</p>
           </TabPanel>
           <TabPanel>
             <StatGroup>
