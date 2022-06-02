@@ -7,6 +7,18 @@ import {
   Box,
   Flex,
   Spacer,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
@@ -65,11 +77,47 @@ const LoginPage: NextPage = () => {
           <Badge>{data && data?.username}</Badge>
         </Box>
       </Flex>
-      <Flex>
-        <Box>
-          <Questions user={user} />
-        </Box>
-      </Flex>
+      <Tabs variant='enclosed-colored'>
+        <TabList>
+          <Tab>Questions</Tab>
+          <Tab>Games</Tab>
+          <Tab>Stats</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Flex>
+              <Box>
+                <Questions user={user} />
+              </Box>
+            </Flex>
+          </TabPanel>
+          <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+          <TabPanel>
+            <StatGroup>
+              <Stat>
+                <StatLabel>Bitcoin Cash Address</StatLabel>
+                <StatNumber>{data && data?.cash_address}</StatNumber>
+                <StatHelpText>
+                  Safe to share and used to receive funds.
+                </StatHelpText>
+              </Stat>
+
+              <Stat>
+                <StatLabel>Bitcoin Cash Balance</StatLabel>
+                <StatNumber>
+                  {data &&
+                    new Intl.NumberFormat().format(data?.cash_balance ?? 0)}
+                </StatNumber>
+                <StatHelpText>
+                  Your Bitcoin Cash balance in satoshis.
+                </StatHelpText>
+              </Stat>
+            </StatGroup>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Container>
   );
 };
