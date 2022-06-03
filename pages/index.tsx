@@ -27,6 +27,7 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { ColorModeButton } from "@components/ColorModeButton";
 import Questions from "@components/Questions";
+import Games from "@components/Games";
 import { UserAccountType } from "../types";
 
 const LoginPage: NextPage = () => {
@@ -86,7 +87,11 @@ const LoginPage: NextPage = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Heading>Your Games</Heading>
+            <Flex>
+              <Box>
+                <Games user={user} data={data}/>
+              </Box>
+            </Flex>
           </TabPanel>
           <TabPanel>
             <Flex>

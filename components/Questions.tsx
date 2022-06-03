@@ -118,9 +118,7 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
             }}
           />
           {errorText.length > 0 ? (
-            <FormHelperText>
-              {"Add a question and answer"}
-            </FormHelperText>
+            <FormHelperText>{"Add a question and answer"}</FormHelperText>
           ) : (
             <FormErrorMessage>{errorText}</FormErrorMessage>
           )}

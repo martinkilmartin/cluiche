@@ -14,3 +14,8 @@ export type UserAccountType = {
   cash_address?: string;
   cash_balance?: number;
 };
+
+export type UUID = {
+  uuid: string;
+};
+
