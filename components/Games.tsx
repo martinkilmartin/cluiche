@@ -40,9 +40,7 @@ import {
 
 type GamesProps = {
   user: User;
-  game: Game;
-  data: UserAccountType;
-  onDelete: () => void;
+  data: UserAccountType | undefined;
 };
 const Games = ({ user, data }: GamesProps): JSX.Element => {
   const [games, setGames] = useState<Game[] | null>(null);
@@ -65,6 +63,15 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
     else setGames(games);
   };
 
+  async function createNewGame(buy_in: number) {
+    const { data, error } = await supabase
+      .from("games")
+      .insert([{ buy_in: buy_in, created_by: user.id }])
+      .single();
+    if (error) console.error("error", error);
+    else console.log(data);
+  }
+
   return (
     <Container centerContent width={"container.xl"}>
       <Heading>New Game</Heading>
@@ -76,6 +83,7 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
             value={format(buyIn)}
             precision={8}
             step={0.00001234}
+            min={0}
           >
             <NumberInputField id='buyIn' />
             <NumberInputStepper>
@@ -83,8 +91,22 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
+          {errorText.length > 0 ? (
+            <FormHelperText>
+              {"Enter a buy-in amount of 0 or more"}
+            </FormHelperText>
+          ) : (
+            <FormErrorMessage>{errorText}</FormErrorMessage>
+          )}
         </FormControl>
-        <Button>Create</Button>
+        <FormControl>
+          <FormLabel htmlFor='invites'>Invite players by email</FormLabel>
+          <Input placeholder='Enter email address(es)' size='md' />
+          <FormHelperText>
+            Separate multiple emails, with a comma.
+          </FormHelperText>
+        </FormControl>
+        <Button onClick={() => createNewGame(parseInt(buyIn))}>Create</Button>
       </Box>
       <Divider />
       <Heading>Your Games</Heading>

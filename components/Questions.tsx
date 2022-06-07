@@ -124,7 +124,6 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           )}
         </FormControl>
         <Button
-          className='btn btn-primary'
           onClick={() => addQuestion(newQuestion, newAnswer, newClue, tag)}
         >
           Add

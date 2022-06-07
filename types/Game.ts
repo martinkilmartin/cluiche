@@ -1,5 +1,4 @@
 import { Question } from "./Question";
-import { UUID } from "./User";
 
 export type Game = {
   id: number;
@@ -8,33 +7,33 @@ export type Game = {
   started_at: number | null;
   paused_at: number | null;
   ended_at: number | null;
-  players: Array<Player>;
-  kitty: Array<Kitty>;
+  players: Record<string, Player>;
+  kitty: Record<string, Kitty>;
   buy_in: number;
-  rounds: Array<Round>;
+  rounds: Record<number, Round>;
 };
 
-type Kitty = UUID & {
+type Player = {
+  email?: string;
+  username?: string;
+  avatar_url?: string;
+};
+
+type Kitty = {
   paid: number;
 };
 
 type Round = {
+  mc: string;
   round: number;
-  questions: Array<GameQuestion>;
+  questions: Record<number, GameQuestion>;
 };
 
-type Player = UUID & {
-  email?: string;
-  username?: string;
-  avatarURL?: string;
-}
-
 type GameQuestion = Question & {
-  answers: Array<Answer>;
+  answers: Record<string, Answer>;
 };
 
 type Answer = {
-  uuid: string;
   answer: string | null;
   correct: boolean | null;
   score: number | null;
