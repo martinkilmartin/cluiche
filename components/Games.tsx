@@ -64,9 +64,21 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
   };
 
   async function createNewGame(buy_in: number) {
+    const user_id = user.id ?? "-1";
     const { data, error } = await supabase
       .from("games")
-      .insert([{ buy_in: buy_in, created_by: user.id }])
+      .insert([
+        {
+          buy_in: buy_in,
+          created_by: user_id,
+          players: {
+            [user_id]: {
+              name: user.id,
+              email: user.email
+            },
+          },
+        },
+      ])
       .single();
     if (error) console.error("error", error);
     else console.log(data);
