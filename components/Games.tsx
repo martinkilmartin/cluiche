@@ -14,6 +14,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  HStack,
   Input,
   List,
   ListIcon,
@@ -44,9 +45,7 @@ type GamesProps = {
 };
 const Games = ({ user, data }: GamesProps): JSX.Element => {
   const [games, setGames] = useState<Game[] | null>(null);
-  const format = (val: string) => `₿` + val;
-  const parse = (val: string) => val.replace(/^\₿/, "");
-  const [buyIn, setBuyIn] = useState("0.00000000");
+  const [buyIn, setBuyIn] = useState(0);
   const [newGame, setNewGame] = useState("");
   const [errorText, setError] = useState("");
 
@@ -63,18 +62,22 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
     else setGames(games);
   };
 
-  async function createNewGame(buy_in: number) {
+  function buyInWrap(n: number) {
+    setBuyIn(n);
+  }
+
+  async function createNewGame() {
     const user_id = user.id ?? "-1";
     const { data, error } = await supabase
       .from("games")
       .insert([
         {
-          buy_in: buy_in,
+          buy_in: buyIn * 100000000,
           created_by: user_id,
           players: {
             [user_id]: {
               name: user.id,
-              email: user.email
+              email: user.email,
             },
           },
         },
@@ -88,29 +91,34 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
     <Container centerContent width={"container.xl"}>
       <Heading>New Game</Heading>
       <Box>
-        <FormControl isRequired isInvalid={errorText.length > 0}>
-          <FormLabel htmlFor='buyIn'>Buy-In</FormLabel>
-          <NumberInput
-            onChange={(valueString) => setBuyIn(parse(valueString))}
-            value={format(buyIn)}
-            precision={8}
-            step={0.00001234}
-            min={0}
-          >
-            <NumberInputField id='buyIn' />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          {errorText.length > 0 ? (
-            <FormHelperText>
-              {"Enter a buy-in amount of 0 or more"}
-            </FormHelperText>
-          ) : (
-            <FormErrorMessage>{errorText}</FormErrorMessage>
-          )}
-        </FormControl>
+        <HStack>
+          <Text fontSize='2xl'>
+            <br />₿
+          </Text>
+          <FormControl isRequired isInvalid={errorText.length > 0}>
+            <FormLabel htmlFor='buyIn'>Buy-In</FormLabel>
+            <NumberInput
+              onChange={(_str, num) => buyInWrap(num)}
+              value={buyIn}
+              precision={8}
+              step={0.00001234}
+              min={0}
+            >
+              <NumberInputField id='buyIn' />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            {errorText.length > 0 ? (
+              <FormHelperText>
+                {"Enter a buy-in amount of 0 or more"}
+              </FormHelperText>
+            ) : (
+              <FormErrorMessage>{errorText}</FormErrorMessage>
+            )}
+          </FormControl>
+        </HStack>
         <FormControl>
           <FormLabel htmlFor='invites'>Invite players by email</FormLabel>
           <Input placeholder='Enter email address(es)' size='md' />
@@ -118,7 +126,7 @@ const Games = ({ user, data }: GamesProps): JSX.Element => {
             Separate multiple emails, with a comma.
           </FormHelperText>
         </FormControl>
-        <Button onClick={() => createNewGame(parseInt(buyIn))}>Create</Button>
+        <Button onClick={() => createNewGame()}>Create</Button>
       </Box>
       <Divider />
       <Heading>Your Games</Heading>
