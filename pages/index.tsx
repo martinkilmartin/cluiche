@@ -27,7 +27,7 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { ColorModeButton } from "@components/ColorModeButton";
 import Questions from "@components/Questions";
-import Games from "@components/Games";
+import Game from "@components/Game";
 import { UserAccountType } from "../types";
 
 const LoginPage: NextPage = () => {
@@ -89,7 +89,7 @@ const LoginPage: NextPage = () => {
           <TabPanel>
             <Flex>
               <Box>
-                <Games user={user} data={data}/>
+                <Game user={user} data={data}/>
               </Box>
             </Flex>
           </TabPanel>
@@ -109,7 +109,6 @@ const LoginPage: NextPage = () => {
                   Safe to share and used to receive funds.
                 </StatHelpText>
               </Stat>
-
               <Stat>
                 <StatLabel>Bitcoin Cash Balance</StatLabel>
                 <StatNumber>
