@@ -101,7 +101,7 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
   }
 
   return (
-    <Container centerContent width={"container.xl"}>
+    <Container centerContent>
       <Heading>Your Game Name</Heading>
       <Text>Some minor blah blah blah</Text>
       <Wrap p={5}>
@@ -170,7 +170,6 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
           bg: "#3e3e3e",
         }}
         p={5}
-        w='full'
         alignItems='center'
         justifyContent='center'
       >
@@ -184,7 +183,6 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
           _dark={{
             bg: "gray.800",
           }}
-          maxW='2xl'
         >
           <Flex minWidth='max-content' alignItems='center' gap='2'>
             <chakra.span

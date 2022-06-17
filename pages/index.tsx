@@ -64,7 +64,7 @@ const LoginPage: NextPage = () => {
     );
 
   return (
-    <Container maxW='2xl'>
+    <Container maxW='3xl'>
       <Flex>
         <Button onClick={() => supabaseClient.auth.signOut()}>Sign out</Button>
         <Spacer />
@@ -87,18 +87,14 @@ const LoginPage: NextPage = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Flex>
-              <Box>
-                <Questions user={user} />
-              </Box>
-            </Flex>
+            <Box>
+              <Questions user={user} />
+            </Box>
           </TabPanel>
           <TabPanel>
-            <Flex>
-              <Box>
-                <Game user={user} data={data}/>
-              </Box>
-            </Flex>
+            <Box>
+              <Game user={user} data={data} />
+            </Box>
           </TabPanel>
           <TabPanel>
             <StatGroup>

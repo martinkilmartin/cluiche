@@ -22,7 +22,8 @@ import {
   List,
   ListIcon,
   ListItem,
-  SimpleGrid,
+  Grid,
+  GridItem,
   Spacer,
   Stack,
   Tabs,
@@ -304,50 +305,42 @@ const Question = ({ question, onDelete }: QuestionProps) => {
   };
 
   return (
-    <>
-      <SimpleGrid
-        spacingY={3}
-        columns={{
-          base: 1,
-          md: 2,
-        }}
+    <Flex w='100%' p={2}>
+      <Grid
+        templateColumns='repeat(5, 1fr)'
         w='full'
-        py={2}
-        px={10}
         fontWeight='hairline'
         key={question.id}
       >
-        <span>{updatedQ}</span>
-        <Flex
-          justify={{
-            md: "end",
-          }}
-        >
-          <ButtonGroup variant='solid' size='sm' spacing={3}>
-            <IconButton
-              colorScheme='green'
-              icon={<AiFillEdit />}
-              aria-label='Edit'
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onOpen();
-              }}
-            />
-            <IconButton
-              colorScheme='red'
-              variant='outline'
-              icon={<BsFillTrashFill />}
-              aria-label='Delete'
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onDelete(e);
-              }}
-            />
-          </ButtonGroup>
-        </Flex>
-      </SimpleGrid>
+        <GridItem colSpan={4} >{updatedQ}</GridItem>
+        <GridItem colSpan={1}>
+          <Flex justify={"end"}>
+            <ButtonGroup variant='solid' size='sm' spacing={3}>
+              <IconButton
+                colorScheme='green'
+                icon={<AiFillEdit />}
+                aria-label='Edit'
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpen();
+                }}
+              />
+              <IconButton
+                colorScheme='red'
+                variant='outline'
+                icon={<BsFillTrashFill />}
+                aria-label='Delete'
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(e);
+                }}
+              />
+            </ButtonGroup>
+          </Flex>
+        </GridItem>
+      </Grid>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -446,7 +439,7 @@ const Question = ({ question, onDelete }: QuestionProps) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   );
 };
 
