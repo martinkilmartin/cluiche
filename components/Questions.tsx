@@ -255,13 +255,7 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           }}
           shadow='lg'
         >
-          <Flex
-            direction={{
-              base: "row",
-              md: "column",
-            }}
-            bg={bg2}
-          >
+          <Flex direction={"column"} bg={bg2}>
             {questions?.length &&
               questions.map((question, qid) => {
                 return (
