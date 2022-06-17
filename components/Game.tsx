@@ -51,7 +51,6 @@ import {
   WrapItem,
   chakra,
 } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 
 type GameProps = {
   user: User;
@@ -170,7 +169,7 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
         _dark={{
           bg: "#3e3e3e",
         }}
-        p={50}
+        p={5}
         w='full'
         alignItems='center'
         justifyContent='center'

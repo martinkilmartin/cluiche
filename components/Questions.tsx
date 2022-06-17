@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { supabase } from "@services/supabase";
 import { User, Question as QuestionType } from "../types";
 import {
   Badge,
   Box,
   Button,
+  ButtonGroup,
   Checkbox,
   Container,
   Flex,
@@ -13,28 +14,49 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Icon,
+  IconButton,
   Input,
   InputGroup,
-  InputRightAddon,
+  InputLeftAddon,
   List,
   ListIcon,
   ListItem,
+  SimpleGrid,
   Spacer,
+  Stack,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
+  useColorModeValue,
+  chakra,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
+import { AiFillEdit, AiTwotoneLock } from "react-icons/ai";
+import { BsBoxArrowUpRight, BsFillTrashFill } from "react-icons/bs";
 
 type QuestionsProps = {
   user: User;
 };
+
 type QuestionProps = {
   question: QuestionType;
-  onDelete: () => void;
+  onDelete: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
+
 const Questions = ({ user }: QuestionsProps): JSX.Element => {
+  const bg = useColorModeValue("white", "gray.800");
+  const bg2 = useColorModeValue("white", "gray.800");
+  const bg3 = useColorModeValue("gray.100", "gray.700");
   const [questions, setQuestions] = useState<QuestionType[] | null>(null);
   const [newQuestion, setNewQuestion] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
@@ -83,6 +105,26 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
     setTag("");
   };
 
+  const handleDoubleClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    switch (e.detail) {
+      case 1:
+        return;
+        break;
+      case 2:
+        deleteQuestion(id);
+        return;
+        break;
+      case 3:
+        return;
+        break;
+      default:
+        return;
+    }
+  };
+
   const deleteQuestion = async (id: number) => {
     try {
       await supabase.from("questions").delete().eq("id", id);
@@ -105,10 +147,21 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
               color: "gray.50",
             }}
             htmlFor='question'
+            srOnly={true}
           >
             Question
           </FormLabel>
-          <InputGroup size='sm'>
+          <InputGroup size='lg'>
+            <InputLeftAddon
+              bg='gray.50'
+              _dark={{
+                bg: "gray.800",
+              }}
+              color='gray.500'
+              rounded='md'
+            >
+              Q
+            </InputLeftAddon>
             <Input
               id='question'
               type='text'
@@ -120,16 +173,6 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
               focusBorderColor='green.400'
               rounded='md'
             />
-            <InputRightAddon
-              bg='gray.50'
-              _dark={{
-                bg: "gray.800",
-              }}
-              color='gray.500'
-              rounded='md'
-            >
-              ?
-            </InputRightAddon>
           </InputGroup>
         </FormControl>
         <FormControl isRequired isInvalid={errorText.length > 0}>
@@ -141,20 +184,33 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
               color: "gray.50",
             }}
             htmlFor='answer'
+            srOnly={true}
           >
             Answer
           </FormLabel>
-          <Input
-            id='answer'
-            type='text'
-            placeholder='Liom fhéin.'
-            value={newAnswer}
-            onChange={(e) => {
-              setNewAnswer(e.target.value);
-            }}
-            focusBorderColor='green.400'
-            rounded='md'
-          />
+          <InputGroup size='lg'>
+            <InputLeftAddon
+              bg='gray.50'
+              _dark={{
+                bg: "gray.800",
+              }}
+              color='gray.500'
+              rounded='md'
+            >
+              A
+            </InputLeftAddon>
+            <Input
+              id='answer'
+              type='text'
+              placeholder='Liom fhéin.'
+              value={newAnswer}
+              onChange={(e) => {
+                setNewAnswer(e.target.value);
+              }}
+              focusBorderColor='green.400'
+              rounded='md'
+            />
+          </InputGroup>
           {errorText.length > 0 ? (
             <FormHelperText>{"Add a question and answer"}</FormHelperText>
           ) : (
@@ -179,68 +235,224 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           </Button>
         </Flex>
       </Box>
-      <Heading>Your Questions</Heading>
-      <Box>
-        <List spacing={3}>
-          {questions?.length &&
-            questions.map((question) => (
-              <Question
-                key={question.id}
-                question={question}
-                onDelete={() => deleteQuestion(question.id)}
-              />
-            ))}
-        </List>
-      </Box>
+      <Heading mt={4}>Your Questions</Heading>
+      <Flex
+        bg='#edf3f8'
+        _dark={{
+          bg: "#3e3e3e",
+        }}
+        p={5}
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Stack
+          direction={{
+            base: "column",
+          }}
+          w='full'
+          bg={{
+            md: bg,
+          }}
+          shadow='lg'
+        >
+          <Flex
+            direction={{
+              base: "row",
+              md: "column",
+            }}
+            bg={bg2}
+          >
+            {questions?.length &&
+              questions.map((question, qid) => {
+                return (
+                  <Question
+                    key={question.id}
+                    question={question}
+                    onDelete={(e) => handleDoubleClick(e, question.id)}
+                  />
+                );
+              })}
+          </Flex>
+        </Stack>
+      </Flex>
     </Container>
   );
 };
 
 const Question = ({ question, onDelete }: QuestionProps) => {
-  const [isAnswered, setIsCompleted] = useState(question.is_answered);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [newQuestion, setNewQuestion] = useState(question.question);
+  const [newAnswer, setNewAnswer] = useState(question.answer);
+  const [isUpdated, setIsCompleted] = useState(false);
+  const [errorText, setError] = useState("");
+  const [updatedQ, setUpdatedQ] = useState(question.question);
 
-  const toggle = async () => {
-    try {
+  const editQuestion = async (q: string, a: string) => {
+    setIsCompleted(false);
+    const qTrim = q.trim();
+    const aTrim = a.trim();
+    if (qTrim.length && aTrim.length) {
+      setError("");
       const { data, error } = await supabase
         .from("questions")
-        .update({ is_answered: !isAnswered })
-        .eq("id", question.id)
-        .single();
+        .update({ question: qTrim, answer: aTrim })
+        .eq("id", question.id);
       if (error) {
-        throw new Error(error.message);
+        setError(error.message);
       }
-      setIsCompleted(data.is_answered);
-    } catch (error) {
-      console.error("error", error);
+      setIsCompleted(true);
+      setTimeout(() => onClose(), 1_234);
+      setTimeout(() => setIsCompleted(false), 1_234);
+      setUpdatedQ(qTrim);
+    } else {
+      setError(qTrim.length ? "Freagra ag teastáil" : "Ceist ag teastáil");
     }
   };
 
   return (
-    <ListItem>
-      <Flex>
-        <Checkbox
-          mr='1'
-          onChange={(_e) => toggle()}
-          checked={isAnswered ? true : false}
-        />
-        <Box>
-          <details>
-            <summary>{question.question}</summary>
-            {question.answer}
-          </details>
-        </Box>
-        <Spacer />
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onDelete();
+    <>
+      <SimpleGrid
+        spacingY={3}
+        columns={{
+          base: 1,
+          md: 2,
+        }}
+        w='full'
+        py={2}
+        px={10}
+        fontWeight='hairline'
+        key={question.id}
+      >
+        <span>{updatedQ}</span>
+        <Flex
+          justify={{
+            md: "end",
           }}
         >
-          ❌
-        </Button>
-      </Flex>
-    </ListItem>
+          <ButtonGroup variant='solid' size='sm' spacing={3}>
+            <IconButton
+              colorScheme='green'
+              icon={<AiFillEdit />}
+              aria-label='Edit'
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onOpen();
+              }}
+            />
+            <IconButton
+              colorScheme='red'
+              variant='outline'
+              icon={<BsFillTrashFill />}
+              aria-label='Delete'
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(e);
+              }}
+            />
+          </ButtonGroup>
+        </Flex>
+      </SimpleGrid>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Question</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl isRequired isInvalid={errorText.length > 0}>
+              <FormLabel
+                fontSize='sm'
+                fontWeight='md'
+                color='gray.700'
+                _dark={{
+                  color: "gray.50",
+                }}
+                htmlFor='question'
+                srOnly={true}
+              >
+                Question
+              </FormLabel>
+              <InputGroup size='lg'>
+                <InputLeftAddon
+                  bg='gray.50'
+                  _dark={{
+                    bg: "gray.800",
+                  }}
+                  color='gray.500'
+                  rounded='md'
+                >
+                  Q
+                </InputLeftAddon>
+                <Input
+                  id='question'
+                  type='text'
+                  placeholder='Cé leis thú'
+                  value={newQuestion}
+                  onChange={(e) => {
+                    setNewQuestion(e.target.value);
+                  }}
+                  focusBorderColor='green.400'
+                  rounded='md'
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl isRequired isInvalid={errorText.length > 0}>
+              <FormLabel
+                fontSize='sm'
+                fontWeight='md'
+                color='gray.700'
+                _dark={{
+                  color: "gray.50",
+                }}
+                htmlFor='answer'
+                srOnly={true}
+              >
+                Answer
+              </FormLabel>
+              <InputGroup size='lg'>
+                <InputLeftAddon
+                  bg='gray.50'
+                  _dark={{
+                    bg: "gray.800",
+                  }}
+                  color='gray.500'
+                  rounded='md'
+                >
+                  A
+                </InputLeftAddon>
+                <Input
+                  id='answer'
+                  type='text'
+                  placeholder='Liom fhéin.'
+                  value={newAnswer}
+                  onChange={(e) => {
+                    setNewAnswer(e.target.value);
+                  }}
+                  focusBorderColor='green.400'
+                  rounded='md'
+                />
+              </InputGroup>
+              {errorText.length > 0 ? (
+                <FormHelperText>{"Add a question and answer"}</FormHelperText>
+              ) : (
+                <FormErrorMessage>{errorText}</FormErrorMessage>
+              )}
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme={isUpdated ? "green" : "blue"}
+              mr={3}
+              onClick={() => editQuestion(newQuestion, newAnswer)}
+            >
+              {isUpdated ? "Success!" : "Save"}
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
