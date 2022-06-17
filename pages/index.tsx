@@ -81,9 +81,9 @@ const LoginPage: NextPage = () => {
       </Flex>
       <Tabs variant='enclosed-colored'>
         <TabList>
-          <Tab>Games</Tab>
+          <Tab>Game</Tab>
           <Tab>Questions</Tab>
-          <Tab>Bank</Tab>
+          <Tab>Stats</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>

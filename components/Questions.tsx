@@ -14,6 +14,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightAddon,
   List,
   ListIcon,
   ListItem,
@@ -95,19 +97,53 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
       <Heading>Add Question</Heading>
       <Box>
         <FormControl isRequired isInvalid={errorText.length > 0}>
-          <FormLabel htmlFor='question'>Question</FormLabel>
-          <Input
-            id='question'
-            type='text'
-            placeholder='Cé leis thú?'
-            value={newQuestion}
-            onChange={(e) => {
-              setNewQuestion(e.target.value);
+          <FormLabel
+            fontSize='sm'
+            fontWeight='md'
+            color='gray.700'
+            _dark={{
+              color: "gray.50",
             }}
-          />
+            htmlFor='question'
+          >
+            Question
+          </FormLabel>
+          <InputGroup size='sm'>
+            <Input
+              id='question'
+              type='text'
+              placeholder='Cé leis thú'
+              value={newQuestion}
+              onChange={(e) => {
+                setNewQuestion(e.target.value);
+              }}
+              focusBorderColor='green.400'
+              rounded='md'
+            />
+            <InputRightAddon
+              bg='gray.50'
+              _dark={{
+                bg: "gray.800",
+              }}
+              color='gray.500'
+              rounded='md'
+            >
+              ?
+            </InputRightAddon>
+          </InputGroup>
         </FormControl>
         <FormControl isRequired isInvalid={errorText.length > 0}>
-          <FormLabel htmlFor='answer'>Answer</FormLabel>
+          <FormLabel
+            fontSize='sm'
+            fontWeight='md'
+            color='gray.700'
+            _dark={{
+              color: "gray.50",
+            }}
+            htmlFor='answer'
+          >
+            Answer
+          </FormLabel>
           <Input
             id='answer'
             type='text'
@@ -116,6 +152,8 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
             onChange={(e) => {
               setNewAnswer(e.target.value);
             }}
+            focusBorderColor='green.400'
+            rounded='md'
           />
           {errorText.length > 0 ? (
             <FormHelperText>{"Add a question and answer"}</FormHelperText>
@@ -123,11 +161,23 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
             <FormErrorMessage>{errorText}</FormErrorMessage>
           )}
         </FormControl>
-        <Button
-          onClick={() => addQuestion(newQuestion, newAnswer, newClue, tag)}
-        >
-          Add
-        </Button>
+        <Flex justifyContent='space-between' alignItems='center' mt={4}>
+          <Button
+            onClick={() => clear()}
+            aria-label='Clear Q &amp; A'
+            colorScheme={"yellow"}
+          >
+            Clear
+          </Button>
+          <Spacer />
+          <Button
+            onClick={() => addQuestion(newQuestion, newAnswer, newClue, tag)}
+            aria-label='Add Q &amp; A'
+            colorScheme={"green"}
+          >
+            Add
+          </Button>
+        </Flex>
       </Box>
       <Heading>Your Questions</Heading>
       <Box>

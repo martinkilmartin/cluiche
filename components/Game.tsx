@@ -105,33 +105,66 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
     <Container centerContent width={"container.xl"}>
       <Heading>Your Game Name</Heading>
       <Text>Some minor blah blah blah</Text>
-      <Wrap>
+      <Wrap p={5}>
         <WrapItem>
-          <Avatar name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+          <Avatar name='shark' src='/avatars/svg/050-shark.svg'>
+            <AvatarBadge borderColor='greenyellow' boxSize='1em' bg='green.500' />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar
-            name='Kola Tioluwani'
-            src='https://bit.ly/tioluwani-kolawole'
-          />
+          <Avatar name='frog' src='/avatars/svg/049-frog.svg'>
+            <AvatarBadge
+              bg='green.500'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar name='Kent Dodds' src='https://bit.ly/kent-c-dodds' />
+          <Avatar name='worker' src='/avatars/svg/048-worker.svg'>
+            <AvatarBadge
+              borderColor='papayawhip'
+              bg='tomato'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar name='Ryan Florence' src='https://bit.ly/ryan-florence' />
+          <Avatar name='zebra' src='/avatars/svg/047-zebra.svg'>
+            <AvatarBadge
+              borderColor='papayawhip'
+              bg='tomato'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar name='Prosper Otemuyiwa' src='https://bit.ly/prosper-baba' />
+          <Avatar name='vampire' src='/avatars/svg/046-vampire.svg'>
+            <AvatarBadge
+              borderColor='papayawhip'
+              bg='tomato'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar name='Christian Nwamba' src='https://bit.ly/code-beast' />
+          <Avatar name='giraffe' src='/avatars/svg/045-giraffe.svg'>
+            <AvatarBadge
+              borderColor='papayawhip'
+              bg='tomato'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
         <WrapItem>
-          <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
+          <Avatar name='officer' src='/avatars/svg/044-officer.svg'>
+            <AvatarBadge
+              borderColor='papayawhip'
+              bg='tomato'
+              boxSize='1em'
+            />
+          </Avatar>
         </WrapItem>
       </Wrap>
-      <Divider />
       <Flex
         bg='#edf3f8'
         _dark={{
@@ -210,7 +243,6 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
           </Flex>
         </Box>
       </Flex>
-      ;
     </Container>
   );
 };
