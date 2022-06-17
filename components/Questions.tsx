@@ -1,12 +1,10 @@
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@services/supabase";
 import { User, Question as QuestionType } from "../types";
 import {
-  Badge,
   Box,
   Button,
   ButtonGroup,
-  Checkbox,
   Container,
   Flex,
   FormControl,
@@ -14,25 +12,15 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftAddon,
-  List,
-  ListIcon,
-  ListItem,
   Grid,
   GridItem,
   Spacer,
   Stack,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   useColorModeValue,
-  chakra,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -42,8 +30,8 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import { AiFillEdit, AiTwotoneLock } from "react-icons/ai";
-import { BsBoxArrowUpRight, BsFillTrashFill } from "react-icons/bs";
+import { AiFillEdit } from "react-icons/ai";
+import { BsFillTrashFill } from "react-icons/bs";
 
 type QuestionsProps = {
   user: User;

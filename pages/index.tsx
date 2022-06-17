@@ -6,20 +6,17 @@ import {
   Container,
   Box,
   Flex,
-  Heading,
   Spacer,
   Stat,
   StatLabel,
   StatNumber,
   StatHelpText,
-  StatArrow,
   StatGroup,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Tooltip,
 } from "@chakra-ui/react";
 import { useUser } from "@supabase/supabase-auth-helpers/react";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
