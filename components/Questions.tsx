@@ -124,9 +124,11 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
   };
 
   return (
-    <Container centerContent>
-      <Heading>Add Question</Heading>
-      <Box>
+    <Box w='100%'>
+      <Container centerContent>
+        <Heading>Add Question</Heading>
+      </Container>
+      <Box w='100%'>
         <FormControl isRequired isInvalid={errorText.length > 0}>
           <FormLabel
             fontSize='sm'
@@ -224,7 +226,9 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           </Button>
         </Flex>
       </Box>
-      <Heading mt={4}>Your Questions</Heading>
+      <Container centerContent>
+        <Heading mt={4}>Your Questions</Heading>
+      </Container>
       <Flex
         bg='#edf3f8'
         _dark={{
@@ -258,7 +262,7 @@ const Questions = ({ user }: QuestionsProps): JSX.Element => {
           </Flex>
         </Stack>
       </Flex>
-    </Container>
+    </Box>
   );
 };
 
@@ -300,7 +304,7 @@ const Question = ({ question, onDelete }: QuestionProps) => {
         fontWeight='hairline'
         key={question.id}
       >
-        <GridItem colSpan={4} >{updatedQ}</GridItem>
+        <GridItem colSpan={4}>{updatedQ}</GridItem>
         <GridItem colSpan={1}>
           <Flex justify={"end"}>
             <ButtonGroup variant='solid' size='sm' spacing={3}>

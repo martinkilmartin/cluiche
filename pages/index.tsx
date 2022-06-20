@@ -84,14 +84,10 @@ const LoginPage: NextPage = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Box>
-              <Questions user={user} />
-            </Box>
+            <Questions user={user} />
           </TabPanel>
           <TabPanel>
-            <Box>
-              <Game user={user} data={data} />
-            </Box>
+            <Game user={user} data={data} />
           </TabPanel>
           <TabPanel>
             <StatGroup>
