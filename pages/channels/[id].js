@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import { useStore, addMessage } from "@lib/Store";
 import { useContext, useEffect, useRef } from "react";
 import UserContext from "@lib/UserContext";
+import {
+  Box,
+} from "@chakra-ui/react";
 
 const ChannelsPage = (props) => {
   const router = useRouter();
@@ -32,21 +35,21 @@ const ChannelsPage = (props) => {
   // Render the channels and messages
   return (
     <Layout channels={channels} activeChannelId={channelId}>
-      <div className='relative h-screen'>
-        <div className='Messages h-full pb-16'>
-          <div className='p-2 overflow-y-auto'>
+      <Box className='relative h-screen'>
+        <Box className='Messages h-full pb-16'>
+          <Box className='p-2 overflow-y-auto'>
             {messages.map((x) => (
               <Message key={x.id} message={x} />
             ))}
-            <div ref={messagesEndRef} style={{ height: 0 }} />
-          </div>
-        </div>
-        <div className='p-2 absolute bottom-0 left-0 w-full'>
+            <Box ref={messagesEndRef} style={{ height: 0 }} />
+          </Box>
+        </Box>
+        <Box className='p-2 absolute bottom-0 left-0 w-full'>
           <MessageInput
             onSubmit={async (text) => addMessage(text, channelId, user.id)}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Layout>
   );
 };
