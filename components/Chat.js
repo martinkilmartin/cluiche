@@ -3,7 +3,7 @@ import Message from "@components/Message";
 import MessageInput from "@components/MessageInput";
 import UserContext from "@lib/UserContext";
 import { useStore, addMessage } from "@lib/Store";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 
 export default function Chat() {
   const channelId = 1;
@@ -19,14 +19,29 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <Box>
-      {messages.map((x) => (
-        <Message key={x.id} message={x} />
-      ))}
-      <Box ref={messagesEndRef} style={{ height: 0 }} />
-      <MessageInput
-        onSubmit={async (text) => addMessage(text, channelId, user.id)}
-      />
+    <Box w='100%'>
+      <Flex
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Stack
+          direction={{
+            base: "column",
+          }}
+          w='full'
+          shadow='lg'
+        >
+          <Flex direction={"column"} p={2}>
+            {messages.map((x) => (
+              <Message key={x.id} message={x} />
+            ))}
+            <Box ref={messagesEndRef} style={{ height: 0 }} />
+            <MessageInput
+              onSubmit={async (text) => addMessage(text, channelId, user.id)}
+            />
+          </Flex>
+        </Stack>
+      </Flex>
     </Box>
   );
 }

@@ -302,7 +302,6 @@ const Question = ({ question, onDelete }: QuestionProps) => {
         templateColumns='repeat(5, 1fr)'
         w='full'
         fontWeight='hairline'
-        key={question.id}
       >
         <GridItem colSpan={4}>{updatedQ}</GridItem>
         <GridItem colSpan={1}>
