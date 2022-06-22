@@ -81,8 +81,8 @@ const LoginPage: NextPage = () => {
         <TabList>
           <Tab>Questions</Tab>
           <Tab>Chat</Tab>
-          <Tab>Game</Tab>
-          <Tab>Stats</Tab>
+          <Tab>(ToDo) Game</Tab>
+          {/* <Tab>Stats</Tab> */}
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -94,7 +94,7 @@ const LoginPage: NextPage = () => {
           <TabPanel>
             <Game user={user} data={data} />
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <StatGroup>
               <Stat>
                 <StatLabel>Bitcoin Cash Address</StatLabel>
@@ -114,7 +114,7 @@ const LoginPage: NextPage = () => {
                 </StatHelpText>
               </Stat>
             </StatGroup>
-          </TabPanel>
+          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </Container>
