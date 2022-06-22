@@ -22,6 +22,7 @@ import { useUser } from "@supabase/supabase-auth-helpers/react";
 import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
+import Chat from "@components/Chat";
 import { ColorModeButton } from "@components/ColorModeButton";
 import Questions from "@components/Questions";
 import Game from "@components/Game";
@@ -80,6 +81,7 @@ const LoginPage: NextPage = () => {
         <TabList>
           <Tab>Questions</Tab>
           <Tab>Game</Tab>
+          <Tab>Chat</Tab>
           <Tab>Stats</Tab>
         </TabList>
         <TabPanels>
@@ -88,6 +90,9 @@ const LoginPage: NextPage = () => {
           </TabPanel>
           <TabPanel>
             <Game user={user} data={data} />
+          </TabPanel>
+          <TabPanel>
+            <Chat />
           </TabPanel>
           <TabPanel>
             <StatGroup>
