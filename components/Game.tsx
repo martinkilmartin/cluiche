@@ -24,6 +24,8 @@ import {
 import { usaStates } from "@constants/usa-states";
 import { euroCountries } from "@constants/euro-countries";
 
+const MAX_Q = 10;
+
 type GameProps = {
   user: User;
   data: UserAccountType | undefined;
@@ -33,6 +35,7 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
   const [buyIn, setBuyIn] = useState(0);
   const [newGame, setNewGame] = useState("");
   const [errorText, setError] = useState("");
+  const [questions, setQuestions] = useState([["", ""]]);
 
   useEffect(() => {
     fetchGame();
@@ -75,20 +78,44 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
     (a, b) => (a[1] as number) - (b[1] as number)
   );
   usaSorted.forEach((usa) => usa.length === 2 && usa.push("🇺🇸"));
-  console.log(usaSorted);
+  //console.log(usaSorted);
   const euSorted = euroCountries.sort(
     (a, b) => (a[1] as number) - (b[1] as number)
   );
   euSorted.forEach((eu) => eu.length === 2 && eu.push("🇪🇺"));
-  console.log(euSorted);
+  //console.log(euSorted);
 
   const usaEuMerged = [...usaSorted, ...euSorted];
-  console.log(usaEuMerged);
+  //console.log(usaEuMerged);
 
   const usaEuSorted = usaEuMerged.sort(
     (a, b) => (a[1] as number) - (b[1] as number)
   );
   console.log(usaEuSorted);
+
+  function createQuestions() {
+    const qashes = new Set();
+    for (let i = 0; i < MAX_Q; i++) {
+      const rando = Math.floor(Math.random() * usaEuSorted.length);
+      console.log(usaEuSorted[rando][0]);
+      console.log(findSmaller(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺"));
+    }
+  }
+
+  function findSmaller(
+    index: number,
+    flag: "🇺🇸" | "🇪🇺"
+  ): null | [string, number, "🇺🇸" | "🇪🇺"] {
+    if (index < 1) {
+      return null;
+    } else if (usaEuSorted[index - 1][2] !== flag) {
+      return usaEuSorted[index - 1] as [string, number, "🇺🇸" | "🇪🇺"];
+    } else {
+      return findSmaller(index - 1, flag);
+    }
+  }
+
+  createQuestions();
 
   return (
     <Box w='100%'>
