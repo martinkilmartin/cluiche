@@ -20,10 +20,8 @@ export default function Chat() {
 
   return (
     <Box w='100%'>
-      <Flex
-        alignItems='center'
-        justifyContent='center'
-      >
+      <Box ref={messagesEndRef} style={{ height: 0 }} />
+      <Flex alignItems='center' justifyContent='center'>
         <Stack
           direction={{
             base: "column",
@@ -32,13 +30,12 @@ export default function Chat() {
           shadow='lg'
         >
           <Flex direction={"column"} p={2}>
-            {messages.map((x) => (
-              <Message key={x.id} message={x} />
-            ))}
-            <Box ref={messagesEndRef} style={{ height: 0 }} />
             <MessageInput
               onSubmit={async (text) => addMessage(text, channelId, user.id)}
             />
+            {messages.reverse().map((x) => (
+              <Message key={x.id} message={x} />
+            ))}
           </Flex>
         </Stack>
       </Flex>

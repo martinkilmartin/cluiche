@@ -2,11 +2,12 @@ import { useContext } from "react";
 import UserContext from "@lib/UserContext";
 import { deleteMessage } from "@lib/Store";
 import TrashIcon from "@components/TrashIcon";
+import diffDisplay from "@lib/time-format";
 import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
 const Message = ({ message }) => {
   const { user, userRoles } = useContext(UserContext);
-
+  const insertedDate = new Date(message.inserted_at);
   return (
     <Flex w='100%' p={2}>
       <Grid
@@ -33,6 +34,7 @@ const Message = ({ message }) => {
           ) : (
             ""
           )}
+          <Text>{diffDisplay(insertedDate)}</Text>
         </GridItem>
       </Grid>
     </Flex>
