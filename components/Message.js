@@ -1,27 +1,34 @@
-import { useContext } from 'react'
-import UserContext from '@lib/UserContext'
-import { deleteMessage } from '@lib/Store'
-import TrashIcon from '@components/TrashIcon'
+import { useContext } from "react";
+import UserContext from "@lib/UserContext";
+import { deleteMessage } from "@lib/Store";
+import TrashIcon from "@components/TrashIcon";
+import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
 
 const Message = ({ message }) => {
-  const { user, userRoles } = useContext(UserContext)
+  const { user, userRoles } = useContext(UserContext);
 
   return (
-    <div className="py-1 flex items-center space-x-2">
-      <div className="text-gray-100 w-4">
-        {(user?.id === message.user_id ||
-          userRoles.some((role) => ['admin', 'moderator'].includes(role))) && (
-          <button onClick={() => deleteMessage(message.id)}>
-            <TrashIcon />
-          </button>
-        )}
-      </div>
-      <div>
-        <p className="text-blue-700 font-bold">{message.author.username}</p>
-        <p className="text-white">{message.message}</p>
-      </div>
-    </div>
-  )
-}
+    <Box>
+      <Grid templateColumns="repeat(7, 1fr)" gap={4}>
+        <GridItem colSpan={2} >
+          <Text>{message.author.username}</Text>
+        </GridItem>
+        <GridItem colSpan={4} >
+          <Text>{message.message}</Text>
+        </GridItem>
+        <GridItem colSpan={1} >
+          {user?.id === message.user_id ||
+            (userRoles.some((role) =>
+              ["admin", "moderator"].includes(role)
+            ) && (
+              <button onClick={() => deleteMessage(message.id)}>
+                <TrashIcon />
+              </button>
+            ))}
+        </GridItem>
+      </Grid>
+    </Box>
+  );
+};
 
-export default Message
+export default Message;

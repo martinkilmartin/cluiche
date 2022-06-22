@@ -55,10 +55,10 @@ export default function Layout(props) {
 
   return (
     <Container>
-      <Grid templateColumns='repeat(2, 1fr)' gap={6}>
-        <GridItem w='20%'>
+      {/* <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+        <GridItem w='20%'> */}
           {/* Sidebar */}
-          <Box maxWidth={"20%"} minWidth={200} maxHeight={"100vh"} p={2}>
+          {/* <Box maxWidth={"20%"} minWidth={200} maxHeight={"100vh"} p={2}>
             <Box p={2}>
               <Button colorScheme='blue' onClick={() => newChannel()}>
                 New Channel
@@ -89,15 +89,15 @@ export default function Layout(props) {
               ))}
             </List>
             <p>{props.activeChannelId}</p>
-          </Box>
-        </GridItem>
-        <GridItem w='80%'>
+          </Box> */}
+        {/* </GridItem>
+        <GridItem w='80%'> */}
           {/* Messages */}
           <Box p={2} flex>
             {props.children}
           </Box>
-        </GridItem>
-      </Grid>
+        {/* </GridItem>
+      </Grid> */}
     </Container>
   );
 }
