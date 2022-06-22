@@ -21,6 +21,9 @@ import {
   chakra,
 } from "@chakra-ui/react";
 
+import { usaStates } from "@constants/usa-states";
+import { euroCountries } from "@constants/euro-countries";
+
 type GameProps = {
   user: User;
   data: UserAccountType | undefined;
@@ -68,6 +71,24 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
     if (error) console.error("error", error);
     else console.log(data);
   }
+  const usaSorted = usaStates.sort(
+    (a, b) => (a[1] as number) - (b[1] as number)
+  );
+  usaSorted.forEach((usa) => usa.length === 2 && usa.push("🇺🇸"));
+  console.log(usaSorted);
+  const euSorted = euroCountries.sort(
+    (a, b) => (a[1] as number) - (b[1] as number)
+  );
+  euSorted.forEach((eu) => eu.length === 2 && eu.push("🇪🇺"));
+  console.log(euSorted);
+
+  const usaEuMerged = [...usaSorted, ...euSorted];
+  console.log(usaEuMerged);
+
+  const usaEuSorted = usaEuMerged.sort(
+    (a, b) => (a[1] as number) - (b[1] as number)
+  );
+  console.log(usaEuSorted);
 
   return (
     <Box w='100%'>

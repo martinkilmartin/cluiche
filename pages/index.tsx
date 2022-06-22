@@ -80,8 +80,8 @@ const LoginPage: NextPage = () => {
       <Tabs variant='enclosed-colored'>
         <TabList>
           <Tab>Questions</Tab>
-          <Tab>Game</Tab>
           <Tab>Chat</Tab>
+          <Tab>Game</Tab>
           <Tab>Stats</Tab>
         </TabList>
         <TabPanels>
@@ -89,10 +89,10 @@ const LoginPage: NextPage = () => {
             <Questions user={user} />
           </TabPanel>
           <TabPanel>
-            <Game user={user} data={data} />
+            <Chat />
           </TabPanel>
           <TabPanel>
-            <Chat />
+            <Game user={user} data={data} />
           </TabPanel>
           <TabPanel>
             <StatGroup>
