@@ -3,7 +3,7 @@ import UserContext from "@lib/UserContext";
 import { deleteMessage } from "@lib/Store";
 import TrashIcon from "@components/TrashIcon";
 import diffDisplay from "@lib/time-format";
-import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Badge, Code, Flex, Grid, GridItem, Tag, Text } from "@chakra-ui/react";
 
 const Message = ({ message }) => {
   const { user, userRoles } = useContext(UserContext);
@@ -11,30 +11,32 @@ const Message = ({ message }) => {
   return (
     <Flex w='100%' p={2}>
       <Grid
-        templateColumns='repeat(8, 1fr)'
+        templateColumns='repeat(5, 1fr)'
         w='full'
-        bg='#edf3f8'
-        _dark={{
-          bg: "#3e3e3e",
-        }}
       >
-        <GridItem colSpan={2}>
-          <Text>{message.author.username}</Text>
+        <GridItem colSpan={1}>
+          <Badge colorScheme={user?.id === message.user_id ? 'green' : ''}>{message.author.username}</Badge>
         </GridItem>
-        <GridItem colSpan={5}>
-          <Text>{message.message}</Text>
+        <GridItem colSpan={3}>
+          <Code colorScheme={user?.id === message.user_id ? 'gray' : ''}>{message.message}</Code>
         </GridItem>
         <GridItem colSpan={1}>
-          {user?.id === message.user_id ? (
-            <button onClick={() => deleteMessage(message.id)}>🚮</button>
-          ) : userRoles.some((role) =>
-              ["admin", "moderator"].includes(role)
-            ) ? (
-            <button onClick={() => deleteMessage(message.id)}>🗑️</button>
-          ) : (
-            ""
-          )}
-          <Text>{diffDisplay(insertedDate)}</Text>
+          <Grid templateColumns='repeat(3, 1fr)'>
+            <GridItem colSpan={1}>
+              {user?.id === message.user_id ? (
+                <button onClick={() => deleteMessage(message.id)}>❌</button>
+              ) : userRoles.some((role) =>
+                  ["admin", "moderator"].includes(role)
+                ) ? (
+                <button onClick={() => deleteMessage(message.id)}>🗑️</button>
+              ) : (
+                ""
+              )}
+            </GridItem>
+            <GridItem colSpan={2}>
+              <Tag>{diffDisplay(insertedDate)}</Tag>
+            </GridItem>
+          </Grid>
         </GridItem>
       </Grid>
     </Flex>
