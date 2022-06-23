@@ -79,7 +79,7 @@ function createQuestions() {
       const flag = usaEuSorted[rando][2];
       const q = `What ${
         flag === "🇺🇸" ? " 🇪🇺 European country" : " 🇺🇸 US State (or Territory)"
-      } is closest is size, either larger or smaller, than ${
+      } is closest is size, either larger or smaller, to ${
         usaEuSorted[rando][0]
       }?`;
       const a = `${larger[0]} is larger than ${
