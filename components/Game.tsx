@@ -77,9 +77,9 @@ function createQuestions() {
     const larger = findLarger(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺");
     if (smaller && larger) {
       const flag = usaEuSorted[rando][2];
-      const q = `What ${
+      const q = `Which ${
         flag === "🇺🇸" ? " 🇪🇺 European country" : " 🇺🇸 US State (or Territory)"
-      } is closest is size, either larger or smaller, to ${
+      } is closest in size (either larger or smaller) to ${
         usaEuSorted[rando][0]
       }?`;
       const a = `${larger[0]} is larger than ${
@@ -97,9 +97,9 @@ function createQuestions() {
     } else if (smaller || larger) {
       if (smaller) {
         const flag = usaEuSorted[rando][2];
-        const q = `What ${
+        const q = `Which ${
           flag === "🇺🇸" ? "European country" : "US State (or Territory)"
-        } is closest is size, but smaller than ${usaEuSorted[rando][0]}?`;
+        } is closest in size, but smaller than ${usaEuSorted[rando][0]}?`;
         const a = `${smaller[0]}.`;
         if (!qashes.has(q)) {
           qArray.push([q, a, smaller[0]]);
@@ -108,9 +108,9 @@ function createQuestions() {
       }
       if (larger) {
         const flag = usaEuSorted[rando][2];
-        const q = `What ${
+        const q = `Which ${
           flag === "🇺🇸" ? "European country" : "US State (or Territory)"
-        } is closest is size, but larger than ${usaEuSorted[rando][0]}?`;
+        } is closest in size, but larger than ${usaEuSorted[rando][0]}?`;
         const a = `${larger[0]}.`;
         if (!qashes.has(q)) {
           qArray.push([q, a, larger[0]]);
