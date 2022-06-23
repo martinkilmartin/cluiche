@@ -81,7 +81,7 @@ const LoginPage: NextPage = () => {
         <TabList>
           <Tab>Questions</Tab>
           <Tab>Chat</Tab>
-          <Tab>(ToDo) Game</Tab>
+          <Tab>(🚧) Game</Tab>
           {/* <Tab>Stats</Tab> */}
         </TabList>
         <TabPanels>
