@@ -58,8 +58,6 @@ export default function createQuestions() {
   let i = 0;
   while (qArray.length < MAX_Q && i < usaEuSorted.length) {
     const rando = Math.floor(Math.random() * usaEuSorted.length);
-    //console.log(usaEuSorted[rando][0]);
-    //console.log(findSmaller(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺"));
     const smaller = findSmaller(
       usaEuSorted,
       rando,
@@ -77,13 +75,13 @@ export default function createQuestions() {
       } is closest in size (either larger or smaller) to ${
         usaEuSorted[rando][0]
       }?`;
-      const a = `${larger[0]} is larger than ${
-        usaEuSorted[rando][0]
-      } by ${new Intl.NumberFormat().format(
+      const a = `${larger[0]} is  ${new Intl.NumberFormat().format(
         larger[1] - (usaEuSorted[rando][1] as number)
-      )} km2, and ${smaller[0]} is smaller by ${new Intl.NumberFormat().format(
+      )} km\u00B2 larger than ${usaEuSorted[rando][0]}, and ${
+        smaller[0]
+      } is ${new Intl.NumberFormat().format(
         (usaEuSorted[rando][1] as number) - smaller[1]
-      )} km2.`;
+      )} km\u00B2 smaller.`;
       if (!qashes.has(q)) {
         qArray.push([q, a, `${larger[0]},${smaller[0]}`]);
         qashes.add(q);

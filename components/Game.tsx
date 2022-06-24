@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@services/supabase";
 import { User, Game, UserAccountType } from "../types";
 import {
@@ -52,9 +52,23 @@ const Game = ({ user }: GameProps): JSX.Element => {
   const [skipped, setSkipped] = useState(0);
   const [gameOver, setGameOver] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   fetchGame();
-  // }, []);
+  useEffect(() => {
+    function showResults() {
+      setError(null);
+      setSuccess(null);
+      setInfo(null);
+      setGameOver(
+        `Congrats on reaching the end! You skipped ${skipped} question${
+          skipped > 1 ? "s" : ""
+        } and answered ${score} correctly! Another round will begin in 5 . 4 . 3 . . .`
+      );
+      setTimeout(() => resetGame(), 4_321);
+      setTimeout(() => onClose(), 3_210);
+    }
+    if (qArray.length && score + skipped === qArray.length) {
+      showResults();
+    }
+  }, [onClose, score, skipped]);
 
   // const fetchGame = async () => {
   //   const { data: games, error } = await supabase
@@ -64,8 +78,6 @@ const Game = ({ user }: GameProps): JSX.Element => {
   //   if (error) console.error("error", error);
   //   else setGame(games[0]);
   // };
-
-
 
   const addAnswer = (a: string) => {
     setError(null);
@@ -79,17 +91,12 @@ const Game = ({ user }: GameProps): JSX.Element => {
     if (possibleAnswers.includes(myAnswer)) {
       setSuccess(`${a} is correct! Well done!`);
       setScore(score + 1);
-      if (qIndex + 1 < qArray.length) {
-        setQIndex(qIndex + 1);
-      }
     } else {
       myAnswer.length
         ? setError(`${a} is wrong!`)
-        : setError("You need to [Give Up] or write an answer.");
+        : setError("Write an answer or press [Give Up]");
     }
-    if (score + skipped === qArray.length) {
-      showResults();
-    }
+    setQIndex(qIndex + 1);
   };
 
   const giveUp = () => {
@@ -101,22 +108,7 @@ const Game = ({ user }: GameProps): JSX.Element => {
     if (qIndex + 1 < qArray.length) {
       setQIndex(qIndex + 1);
     }
-    if (score + skipped === qArray.length) {
-      showResults();
-    }
   };
-
-  function showResults() {
-    setError(null);
-    setSuccess(null);
-    setInfo(null);
-    setGameOver(
-      `Congrats on reaching the end! You skipped ${skipped} question${
-        skipped > 1 ? "s" : ""
-      } and answered ${score} correctly!`
-    );
-    setTimeout(() => resetGame(), 4_321);
-  }
 
   function resetGame() {
     setError(null);
@@ -131,31 +123,31 @@ const Game = ({ user }: GameProps): JSX.Element => {
   }
 
   return (
-    <Box w='100%'>
+    <Box w="100%">
       <Flex
-        bg='#edf3f8'
+        bg="#edf3f8"
         _dark={{
           bg: "#3e3e3e",
         }}
         p={5}
-        alignItems='center'
-        justifyContent='center'
+        alignItems="center"
+        justifyContent="center"
       >
         <Box
-          mx='auto'
+          mx="auto"
           px={8}
           py={4}
-          rounded='lg'
-          shadow='lg'
-          bg='white'
+          rounded="lg"
+          shadow="lg"
+          bg="white"
           _dark={{
             bg: "gray.800",
           }}
         >
-          <Flex minWidth='max-content' alignItems='center' gap='2'>
+          <Flex minWidth="max-content" alignItems="center" gap="2">
             <chakra.span
-              fontSize='md'
-              color='gray.600'
+              fontSize="md"
+              color="gray.600"
               _dark={{
                 color: "gray.400",
               }}
@@ -166,12 +158,12 @@ const Game = ({ user }: GameProps): JSX.Element => {
           </Flex>
           <Box mt={2}>
             <Text
-              fontSize='2xl'
-              color='gray.700'
+              fontSize="2xl"
+              color="gray.700"
               _dark={{
                 color: "white",
               }}
-              fontWeight='700'
+              fontWeight="700"
               _hover={{
                 color: "gray.600",
                 _dark: {
@@ -183,31 +175,31 @@ const Game = ({ user }: GameProps): JSX.Element => {
               {qArray[qIndex][0]}
             </Text>
             <FormControl isRequired mt={2}>
-              <FormLabel htmlFor='answer'>Answer</FormLabel>
+              <FormLabel htmlFor="answer">Answer</FormLabel>
               <Input
-                id='answer'
-                placeholder='Enter you answer here'
+                id="answer"
+                placeholder="Enter you answer here"
                 onChange={(e) => {
                   setNewAnswer(e.target.value);
                 }}
               />
             </FormControl>
           </Box>
-          <Flex justifyContent='space-between' alignItems='center' mt={4}>
-            <Button aria-label='Vote Up' fontSize={"2xl"} colorScheme={"green"}>
-              👍
+          <Flex justifyContent="space-between" alignItems="center" mt={4}>
+            <Button aria-label="Vote Up" fontSize={"2xl"} colorScheme={"green"}>
+              ⬆
             </Button>
             <Button
-              aria-label='Vote Down'
+              aria-label="Vote Down"
               fontSize={"2xl"}
               ml={2}
               colorScheme={"red"}
             >
-              👎
+              ⬇
             </Button>
             <Spacer />
             <Button
-              colorScheme='blue'
+              colorScheme="orange"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -218,7 +210,8 @@ const Game = ({ user }: GameProps): JSX.Element => {
               Give Up
             </Button>
             <Button
-              colorScheme='blue'
+              ml={2}
+              colorScheme="blue"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -226,7 +219,7 @@ const Game = ({ user }: GameProps): JSX.Element => {
                 addAnswer(newAnswer);
               }}
             >
-              Next
+              Submit
             </Button>
           </Flex>
         </Box>
@@ -236,12 +229,12 @@ const Game = ({ user }: GameProps): JSX.Element => {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            {(errorText && <MyAlert type='Error' message={errorText} />) ||
+            {(errorText && <MyAlert type="Error" message={errorText} />) ||
               (successText && (
-                <MyAlert type='Sucess' message={successText} />
+                <MyAlert type="Sucess" message={successText} />
               )) ||
-              (infoText && <MyAlert type='Info' message={infoText} />) ||
-              (gameOver && <MyAlert type='Sucess' message={gameOver} />)}
+              (infoText && <MyAlert type="Info" message={infoText} />) ||
+              (gameOver && <MyAlert type="Sucess" message={gameOver} />)}
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -272,23 +265,23 @@ const iconMap = {
 
 const MyAlert = ({ type, message }: AlertProps) => (
   <Flex
-    maxW='sm'
-    w='full'
-    mx='auto'
-    bg='white'
+    maxW="sm"
+    w="full"
+    mx="auto"
+    bg="white"
     _dark={{
       bg: "gray.800",
     }}
-    rounded='lg'
-    overflow='hidden'
+    rounded="lg"
+    overflow="hidden"
   >
     <Flex
-      justifyContent='center'
-      alignItems='center'
+      justifyContent="center"
+      alignItems="center"
       w={12}
       bg={colorMap[type][0]}
     >
-      <Icon as={iconMap[type]} color='white' boxSize={6} />
+      <Icon as={iconMap[type]} color="white" boxSize={6} />
     </Flex>
 
     <Box mx={-3} py={2} px={4}>
@@ -298,16 +291,16 @@ const MyAlert = ({ type, message }: AlertProps) => (
           _dark={{
             color: colorMap[type][1],
           }}
-          fontWeight='bold'
+          fontWeight="bold"
         >
           {type}
         </chakra.span>
         <chakra.p
-          color='gray.600'
+          color="gray.600"
           _dark={{
             color: "gray.200",
           }}
-          fontSize='sm'
+          fontSize="sm"
         >
           {message}
         </chakra.p>
