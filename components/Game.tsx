@@ -1,32 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@services/supabase";
 import { User, Game, UserAccountType } from "../types";
 import {
-  Avatar,
-  AvatarBadge,
   Box,
   Button,
-  Container,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Icon,
   Input,
   Spacer,
-  Stat,
-  StatNumber,
   Text,
   useDisclosure,
-  Wrap,
-  WrapItem,
   chakra,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
 import {
@@ -36,118 +26,11 @@ import {
   AiFillCloseSquare,
   AiOutlineThunderbolt,
 } from "react-icons/ai";
-import { BsFillTrashFill } from "react-icons/bs";
 
 import { usaStates } from "@constants/usa-states";
 import { euroCountries } from "@constants/euro-countries";
 
-const MAX_Q = 10;
-
-const usaEuSorted = sortData();
-
-function sortData() {
-  const usaSorted = usaStates.sort(
-    (a, b) => (a[1] as number) - (b[1] as number)
-  );
-  usaSorted.forEach((usa) => usa.length === 2 && usa.push("🇺🇸"));
-
-  const euSorted = euroCountries.sort(
-    (a, b) => (a[1] as number) - (b[1] as number)
-  );
-  euSorted.forEach((eu) => eu.length === 2 && eu.push("🇪🇺"));
-
-  const usaEuMerged = [...usaSorted, ...euSorted];
-
-  const usaEuSorted = usaEuMerged.sort(
-    (a, b) => (a[1] as number) - (b[1] as number)
-  );
-  return usaEuSorted;
-}
-
-function createQuestions() {
-  const qashes = new Set();
-  const qArray = new Array<Array<string>>();
-  const answers = new Array<string>();
-  let i = 0;
-  while (qArray.length < MAX_Q && i < usaEuSorted.length) {
-    const rando = Math.floor(Math.random() * usaEuSorted.length);
-    //console.log(usaEuSorted[rando][0]);
-    //console.log(findSmaller(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺"));
-    const smaller = findSmaller(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺");
-    const larger = findLarger(rando, usaEuSorted[rando][2] as "🇺🇸" | "🇪🇺");
-    if (smaller && larger) {
-      const flag = usaEuSorted[rando][2];
-      const q = `Which ${
-        flag === "🇺🇸" ? " 🇪🇺 European country" : " 🇺🇸 US State (or Territory)"
-      } is closest in size (either larger or smaller) to ${
-        usaEuSorted[rando][0]
-      }?`;
-      const a = `${larger[0]} is larger than ${
-        usaEuSorted[rando][0]
-      } by ${new Intl.NumberFormat().format(
-        larger[1] - (usaEuSorted[rando][1] as number)
-      )} km2, and ${smaller[0]} is smaller by ${new Intl.NumberFormat().format(
-        (usaEuSorted[rando][1] as number) - smaller[1]
-      )} km2.`;
-      if (!qashes.has(q)) {
-        qArray.push([q, a, `${larger[0]},${smaller[0]}`]);
-        qashes.add(q);
-        answers.push();
-      }
-    } else if (smaller || larger) {
-      if (smaller) {
-        const flag = usaEuSorted[rando][2];
-        const q = `Which ${
-          flag === "🇺🇸" ? "European country" : "US State (or Territory)"
-        } is closest in size, but smaller than ${usaEuSorted[rando][0]}?`;
-        const a = `${smaller[0]}.`;
-        if (!qashes.has(q)) {
-          qArray.push([q, a, smaller[0]]);
-          qashes.add(q);
-        }
-      }
-      if (larger) {
-        const flag = usaEuSorted[rando][2];
-        const q = `Which ${
-          flag === "🇺🇸" ? "European country" : "US State (or Territory)"
-        } is closest in size, but larger than ${usaEuSorted[rando][0]}?`;
-        const a = `${larger[0]}.`;
-        if (!qashes.has(q)) {
-          qArray.push([q, a, larger[0]]);
-          qashes.add(q);
-        }
-      }
-    }
-    i++;
-  }
-  return qArray;
-}
-
-function findSmaller(
-  index: number,
-  flag: "🇺🇸" | "🇪🇺"
-): null | [string, number, "🇺🇸" | "🇪🇺"] {
-  if (index < 1) {
-    return null;
-  } else if (usaEuSorted[index - 1][2] !== flag) {
-    return usaEuSorted[index - 1] as [string, number, "🇺🇸" | "🇪🇺"];
-  } else {
-    return findSmaller(index - 1, flag);
-  }
-}
-
-function findLarger(
-  index: number,
-  flag: "🇺🇸" | "🇪🇺"
-): null | [string, number, "🇺🇸" | "🇪🇺"] {
-  if (index >= usaEuSorted.length - 1) {
-    return null;
-  } else if (usaEuSorted[index + 1][2] !== flag) {
-    return usaEuSorted[index + 1] as [string, number, "🇺🇸" | "🇪🇺"];
-  } else {
-    return findLarger(index + 1, flag);
-  }
-}
+import createQuestions from "@utils/qwizzerr";
 
 let qArray = createQuestions();
 
@@ -155,7 +38,7 @@ type GameProps = {
   user: User;
   data: UserAccountType | undefined;
 };
-const Game = ({ user, data }: GameProps): JSX.Element => {
+const Game = ({ user }: GameProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [game, setGame] = useState<Game | null>(null);
   const [buyIn, setBuyIn] = useState(0);
@@ -182,30 +65,7 @@ const Game = ({ user, data }: GameProps): JSX.Element => {
   //   else setGame(games[0]);
   // };
 
-  function buyInWrap(n: number) {
-    setBuyIn(n);
-  }
 
-  async function createNewGame() {
-    const user_id = user.id ?? "-1";
-    const { data, error } = await supabase
-      .from("games")
-      .insert([
-        {
-          buy_in: buyIn * 100000000,
-          created_by: user_id,
-          players: {
-            [user_id]: {
-              name: user.id,
-              email: user.email,
-            },
-          },
-        },
-      ])
-      .single();
-    if (error) console.error("error", error);
-    else console.log(data);
-  }
 
   const addAnswer = (a: string) => {
     setError(null);
