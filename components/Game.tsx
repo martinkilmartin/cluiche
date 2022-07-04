@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@services/supabase";
-import { User, Game, UserAccountType } from "../types";
 import {
   Box,
   Button,
@@ -27,20 +25,13 @@ import {
   AiOutlineThunderbolt,
 } from "react-icons/ai";
 
-import { usaStates } from "@constants/usa-states";
-import { euroCountries } from "@constants/euro-countries";
 
 import createQuestions from "@utils/qwizzerr";
 
 let qArray = createQuestions();
 
-type GameProps = {
-  user: User;
-  data: UserAccountType | undefined;
-};
-const Game = ({ user }: GameProps): JSX.Element => {
+const Game = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [game, setGame] = useState<Game | null>(null);
   const [buyIn, setBuyIn] = useState(0);
   const [newGame, setNewGame] = useState("");
   const [errorText, setError] = useState<string | null>(null);
@@ -50,6 +41,7 @@ const Game = ({ user }: GameProps): JSX.Element => {
   const [qIndex, setQIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [skipped, setSkipped] = useState(0);
+  const [wrong, setWrong] = useState(0);
   const [gameOver, setGameOver] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,10 +57,10 @@ const Game = ({ user }: GameProps): JSX.Element => {
       setTimeout(() => resetGame(), 4_321);
       setTimeout(() => onClose(), 3_210);
     }
-    if (qArray.length && score + skipped === qArray.length) {
+    if (qArray.length && score + skipped + wrong === qArray.length) {
       showResults();
     }
-  }, [onClose, score, skipped]);
+  }, [onClose, score, skipped, wrong]);
 
   // const fetchGame = async () => {
   //   const { data: games, error } = await supabase
@@ -91,12 +83,16 @@ const Game = ({ user }: GameProps): JSX.Element => {
     if (possibleAnswers.includes(myAnswer)) {
       setSuccess(`${a} is correct! Well done!`);
       setScore(score + 1);
+      setQIndex(qIndex + 1);
     } else {
-      myAnswer.length
-        ? setError(`${a} is wrong!`)
-        : setError("Write an answer or press [Give Up]");
+      if (myAnswer.length) {
+        setError(`${a} is wrong!`);
+        setWrong(wrong + 1);
+        setQIndex(qIndex + 1);
+      } else {
+        setError("Write an answer or press [Give Up]");
+      }
     }
-    setQIndex(qIndex + 1);
   };
 
   const giveUp = () => {
@@ -105,9 +101,7 @@ const Game = ({ user }: GameProps): JSX.Element => {
     setGameOver(null);
     setInfo(qArray[qIndex][1]);
     setSkipped(skipped + 1);
-    if (qIndex + 1 < qArray.length) {
-      setQIndex(qIndex + 1);
-    }
+    setQIndex(qIndex + 1);
   };
 
   function resetGame() {
@@ -123,118 +117,125 @@ const Game = ({ user }: GameProps): JSX.Element => {
   }
 
   return (
-    <Box w="100%">
-      <Flex
-        bg="#edf3f8"
-        _dark={{
-          bg: "#3e3e3e",
-        }}
-        p={5}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Box
-          mx="auto"
-          px={8}
-          py={4}
-          rounded="lg"
-          shadow="lg"
-          bg="white"
+    <Box w='100%'>
+      {qArray[qIndex] && (
+        <Flex
+          bg='#edf3f8'
           _dark={{
-            bg: "gray.800",
+            bg: "#3e3e3e",
           }}
+          p={5}
+          alignItems='center'
+          justifyContent='center'
         >
-          <Flex minWidth="max-content" alignItems="center" gap="2">
-            <chakra.span
-              fontSize="md"
-              color="gray.600"
-              _dark={{
-                color: "gray.400",
-              }}
-            >
-              {qArray?.length && `Question ${qIndex + 1} of ${qArray?.length}`}
-            </chakra.span>
-            <Spacer />
-          </Flex>
-          <Box mt={2}>
-            <Text
-              fontSize="2xl"
-              color="gray.700"
-              _dark={{
-                color: "white",
-              }}
-              fontWeight="700"
-              _hover={{
-                color: "gray.600",
-                _dark: {
-                  color: "gray.200",
-                },
-                textDecor: "underline",
-              }}
-            >
-              {qArray[qIndex][0]}
-            </Text>
-            <FormControl isRequired mt={2}>
-              <FormLabel htmlFor="answer">Answer</FormLabel>
-              <Input
-                id="answer"
-                placeholder="Enter you answer here"
-                onChange={(e) => {
-                  setNewAnswer(e.target.value);
+          <Box
+            mx='auto'
+            px={8}
+            py={4}
+            rounded='lg'
+            shadow='lg'
+            bg='white'
+            _dark={{
+              bg: "gray.800",
+            }}
+          >
+            <Flex minWidth='max-content' alignItems='center' gap='2'>
+              <chakra.span
+                fontSize='md'
+                color='gray.600'
+                _dark={{
+                  color: "gray.400",
                 }}
-              />
-            </FormControl>
+              >
+                {qArray?.length &&
+                  `Question ${qIndex + 1} of ${qArray?.length}`}
+              </chakra.span>
+              <Spacer />
+            </Flex>
+            <Box mt={2}>
+              <Text
+                fontSize='2xl'
+                color='gray.700'
+                _dark={{
+                  color: "white",
+                }}
+                fontWeight='700'
+                _hover={{
+                  color: "gray.600",
+                  _dark: {
+                    color: "gray.200",
+                  },
+                  textDecor: "underline",
+                }}
+              >
+                {qArray[qIndex][0]}
+              </Text>
+              <FormControl isRequired mt={2}>
+                <FormLabel htmlFor='answer'>Answer</FormLabel>
+                <Input
+                  id='answer'
+                  placeholder='Enter you answer here'
+                  onChange={(e) => {
+                    setNewAnswer(e.target.value);
+                  }}
+                />
+              </FormControl>
+            </Box>
+            <Flex justifyContent='space-between' alignItems='center' mt={4}>
+              <Button
+                aria-label='Vote Up'
+                fontSize={"2xl"}
+                colorScheme={"green"}
+              >
+                ⬆
+              </Button>
+              <Button
+                aria-label='Vote Down'
+                fontSize={"2xl"}
+                ml={2}
+                colorScheme={"red"}
+              >
+                ⬇
+              </Button>
+              <Spacer />
+              <Button
+                colorScheme='orange'
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpen();
+                  giveUp();
+                }}
+              >
+                Give Up
+              </Button>
+              <Button
+                ml={2}
+                colorScheme='blue'
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onOpen();
+                  addAnswer(newAnswer);
+                }}
+              >
+                Submit
+              </Button>
+            </Flex>
           </Box>
-          <Flex justifyContent="space-between" alignItems="center" mt={4}>
-            <Button aria-label="Vote Up" fontSize={"2xl"} colorScheme={"green"}>
-              ⬆
-            </Button>
-            <Button
-              aria-label="Vote Down"
-              fontSize={"2xl"}
-              ml={2}
-              colorScheme={"red"}
-            >
-              ⬇
-            </Button>
-            <Spacer />
-            <Button
-              colorScheme="orange"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onOpen();
-                giveUp();
-              }}
-            >
-              Give Up
-            </Button>
-            <Button
-              ml={2}
-              colorScheme="blue"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onOpen();
-                addAnswer(newAnswer);
-              }}
-            >
-              Submit
-            </Button>
-          </Flex>
-        </Box>
-      </Flex>
+        </Flex>
+      )}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            {(errorText && <MyAlert type="Error" message={errorText} />) ||
+            {(errorText && <MyAlert type='Error' message={errorText} />) ||
               (successText && (
-                <MyAlert type="Sucess" message={successText} />
+                <MyAlert type='Sucess' message={successText} />
               )) ||
-              (infoText && <MyAlert type="Info" message={infoText} />) ||
-              (gameOver && <MyAlert type="Sucess" message={gameOver} />)}
+              (infoText && <MyAlert type='Info' message={infoText} />) ||
+              (gameOver && <MyAlert type='Sucess' message={gameOver} />)}
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -265,23 +266,23 @@ const iconMap = {
 
 const MyAlert = ({ type, message }: AlertProps) => (
   <Flex
-    maxW="sm"
-    w="full"
-    mx="auto"
-    bg="white"
+    maxW='sm'
+    w='full'
+    mx='auto'
+    bg='white'
     _dark={{
       bg: "gray.800",
     }}
-    rounded="lg"
-    overflow="hidden"
+    rounded='lg'
+    overflow='hidden'
   >
     <Flex
-      justifyContent="center"
-      alignItems="center"
+      justifyContent='center'
+      alignItems='center'
       w={12}
       bg={colorMap[type][0]}
     >
-      <Icon as={iconMap[type]} color="white" boxSize={6} />
+      <Icon as={iconMap[type]} color='white' boxSize={6} />
     </Flex>
 
     <Box mx={-3} py={2} px={4}>
@@ -291,16 +292,16 @@ const MyAlert = ({ type, message }: AlertProps) => (
           _dark={{
             color: colorMap[type][1],
           }}
-          fontWeight="bold"
+          fontWeight='bold'
         >
           {type}
         </chakra.span>
         <chakra.p
-          color="gray.600"
+          color='gray.600'
           _dark={{
             color: "gray.200",
           }}
-          fontSize="sm"
+          fontSize='sm'
         >
           {message}
         </chakra.p>
