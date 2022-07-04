@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@services/supabase";
-import { User, Game, Player, UserAccountType } from "../types";
 import {
-  Avatar,
+  User,
+  Game,
+  Player,
+  UserAccountType,
+  Question as QuestionType,
+} from "../types";
+import {
   Box,
   Container,
+  Divider,
   Heading,
-  List,
-  ListItem,
-  Stat,
-  StatLabel,
-  StatNumber,
   Text,
   Wrap,
   WrapItem,
@@ -23,11 +24,25 @@ type PlayProps = {
 const Play = ({ user }: PlayProps): JSX.Element => {
   const [games, setGames] = useState<Game[] | null>(null);
   const [players, setPlayers] = useState<Player[] | null>(null);
+  const [questions, setQuestions] = useState<QuestionType[] | null>(null);
   const [errorText, setError] = useState("");
 
   useEffect(() => {
     fetchGames();
   }, []);
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  const fetchQuestions = async () => {
+    const { data: questions, error } = await supabase
+      .from("questions")
+      .select("*")
+      .order("id", { ascending: true });
+    if (error) console.error("error", error);
+    else setQuestions(questions);
+  };
 
   const fetchGames = async () => {
     const { data: games, error } = await supabase
@@ -41,13 +56,12 @@ const Play = ({ user }: PlayProps): JSX.Element => {
     }
   };
 
-
   function findPlayers(game: Game) {
     const foundPlayers: any = [];
     Object.entries(game.players).forEach((p) => {
       foundPlayers.push(p[1]);
     });
-    setPlayers(foundPlayers)
+    setPlayers(foundPlayers);
   }
 
   return (
@@ -62,6 +76,8 @@ const Play = ({ user }: PlayProps): JSX.Element => {
               </WrapItem>
             ))}
         </Wrap>
+        <Divider />
+        <Heading mt={4}>You have {questions?.length} Questions</Heading>
       </Box>
     </Container>
   );
