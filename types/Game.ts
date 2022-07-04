@@ -13,10 +13,9 @@ export type Game = {
   rounds: Record<number, Round>;
 };
 
-type Player = {
-  email?: string;
-  username?: string;
-  avatar_url?: string;
+export type Player = {
+  name: string;
+  avatar: string;
 };
 
 type Kitty = {

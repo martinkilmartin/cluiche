@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { User, UserAccountType } from "../types";
 import {
   Box,
   Button,

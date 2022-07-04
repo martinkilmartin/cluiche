@@ -26,6 +26,7 @@ import Chat from "@components/Chat";
 import { ColorModeButton } from "@components/ColorModeButton";
 import Questions from "@components/Questions";
 import Game from "@components/Game";
+import Play from "@components/Play";
 import { UserAccountType } from "../types";
 
 const LoginPage: NextPage = () => {
@@ -81,7 +82,9 @@ const LoginPage: NextPage = () => {
         <TabList>
           <Tab>Questions</Tab>
           <Tab>Chat</Tab>
-          <Tab>(🚧) Game</Tab>
+          <Tab>1 player</Tab>
+          <Tab>MultiPlayer</Tab>
+          {/* <Tab>(🚧) Games</Tab> */}
           {/* <Tab>Stats</Tab> */}
         </TabList>
         <TabPanels>
@@ -92,7 +95,10 @@ const LoginPage: NextPage = () => {
             <Chat />
           </TabPanel>
           <TabPanel>
-            <Game user={user} data={data} />
+            <Game />
+          </TabPanel>
+          <TabPanel>
+            <Play user={user} data={data} />
           </TabPanel>
           {/* <TabPanel>
             <StatGroup>
