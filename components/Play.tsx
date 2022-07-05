@@ -65,9 +65,9 @@ const Play = ({ user }: PlayProps): JSX.Element => {
   }
 
   return (
-    <Container centerContent width={"container.xl"}>
-      <Heading>Game</Heading>
-      <Box>
+    <Box w='100%'>
+      <Container centerContent width={"container.xl"}>
+        <Heading>Game</Heading>
         <Wrap spacing={3}>
           {players?.length &&
             players.map((player, index) => (
@@ -78,8 +78,8 @@ const Play = ({ user }: PlayProps): JSX.Element => {
         </Wrap>
         <Divider />
         <Heading mt={4}>You have {questions?.length} Questions</Heading>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
